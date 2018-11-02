@@ -1,2 +1,3 @@
 # dw
-Simple wrapper for the "dialog" executable
+
+Simple wrapper for the `/usr/bin/dialog` executable.
