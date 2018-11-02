@@ -25,7 +25,7 @@ func SetDialogPath(path string) {
 }
 
 // Create a new struct that represents a dialog
-func NewDialog(width, height int) *Dialog {
+func New(width, height int) *Dialog {
 	return &Dialog{width, height}
 }
 
