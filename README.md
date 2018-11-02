@@ -1,2 +1,2 @@
 # dw
-Simple wraper for the "dialog" executable
+Simple wrapper for the "dialog" executable
