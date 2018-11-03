@@ -9,29 +9,27 @@ import (
 	"strconv"
 )
 
-var (
-	dialogcmd = "/usr/bin/dialog"
-)
-
-// Represents a message box, menu or similar text widget
+// Represents a message box, menu or similar text widget.
+// Also contains the path to the dialog executable.
 type Dialog struct {
 	width  int
 	height int
-}
-
-// Set the full path to the dialog utility (eg. "/usr/bin/dialog")
-func SetDialogPath(path string) {
-	dialogcmd = path
+	path   string
 }
 
 // Create a new struct that represents a dialog
 func New(width, height int) *Dialog {
-	return &Dialog{width, height}
+	return &Dialog{width, height, "/usr/bin/dialog"}
+}
+
+// Set the full path to the dialog utility (eg. "/usr/bin/dialog")
+func (d *Dialog) SetPath(path string) {
+	d.path = path
 }
 
 // Uses dialog to display a message box
 func (d *Dialog) MsgBox(msg string) {
-	cmd := exec.Command(dialogcmd, "--msgbox", msg, strconv.Itoa(d.height), strconv.Itoa(d.width))
+	cmd := exec.Command(d.path, "--msgbox", msg, strconv.Itoa(d.height), strconv.Itoa(d.width))
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	err := cmd.Run()
@@ -64,9 +62,10 @@ func (d *Dialog) Menu(text string, menuheight int, menuItemPairs map[string]stri
 	}
 
 	// Run the dialog tool
-	cmd := exec.Command(dialogcmd, args...)
+	cmd := exec.Command(d.path, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
+
 	var out bytes.Buffer
 	cmd.Stderr = &out
 	if err := cmd.Run(); err != nil {
