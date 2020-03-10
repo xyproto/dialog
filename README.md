@@ -48,7 +48,7 @@ func main() {
 
 ## Requirements
 
-* Go >= 1.10
+* Go >= 1.3
 
 ## General info
 
