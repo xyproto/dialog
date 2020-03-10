@@ -2,14 +2,13 @@ package dialog
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 	"sort"
 	"strconv"
 )
 
-// Represents a message box, menu or similar text widget.
+// Dialog represents a message box, menu or similar text widget.
 // Also contains the path to the dialog executable.
 type Dialog struct {
 	width  int
@@ -17,33 +16,31 @@ type Dialog struct {
 	path   string
 }
 
-// Create a new struct that represents a dialog
+// New will create a new Dialog struct
 func New(width, height int) *Dialog {
 	return &Dialog{width, height, "/usr/bin/dialog"}
 }
 
-// Set the full path to the dialog utility (eg. "/usr/bin/dialog")
+// SetPath will set the full path to the dialog utility (eg. "/usr/bin/dialog")
 func (d *Dialog) SetPath(path string) {
 	d.path = path
 }
 
-// Uses dialog to display a message box
-func (d *Dialog) MsgBox(msg string) {
-	cmd := exec.Command(d.path, "--msgbox", msg, strconv.Itoa(d.height), strconv.Itoa(d.width))
+// MsgBox can display a message box with the given text to the user
+func (d *Dialog) MsgBox(text string) error {
+	cmd := exec.Command(d.path, "--msgbox", text, strconv.Itoa(d.height), strconv.Itoa(d.width))
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
-	err := cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	return cmd.Run()
 }
 
-// Present a menu for the user, using the dialog command.
-// Takes a message for the user, height of the menu measured in lines,
-// and a list of menu options, in the form of a map from
-// menu item label to item value. Returns the menu item value that was chosen.
-func (d *Dialog) Menu(text string, menuheight int, menuItemPairs map[string]string) string {
+// Menu can present a menu for the user
+// Takes:
+// * A message for the user
+// * The desired height (counted in lines)
+// * A map of menu itmes (item label -> item value)
+// Returns the chosen item value.
+func (d *Dialog) Menu(text string, menuheight int, menuItemPairs map[string]string) (string, error) {
 	args := []string{"--menu", text, strconv.Itoa(d.height), strconv.Itoa(d.width), strconv.Itoa(menuheight)}
 
 	// Sort the keys
@@ -69,10 +66,20 @@ func (d *Dialog) Menu(text string, menuheight int, menuItemPairs map[string]stri
 	var out bytes.Buffer
 	cmd.Stderr = &out
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return "", err
 	}
 
 	// Return the output from the dialog tool
-	return out.String()
+	return out.String(), nil
+}
+
+// YesNo presents a yes/no choice to the user. Returns true if "yes".
+func (d *Dialog) YesNo(text string) (bool, error) {
+	cmd := exec.Command(d.path, "--yesno", text, strconv.Itoa(d.height), strconv.Itoa(d.width))
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	if err := cmd.Start(); err != nil {
+		return false, err
+	}
+	return cmd.Wait() == nil, nil
 }
