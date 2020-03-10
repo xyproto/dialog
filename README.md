@@ -7,6 +7,11 @@ Simple wrapper for the `dialog` executable.
 * [godoc.org](https://godoc.org/github.com/xyproto/dialog)
 * [pkg.go.dev](https://pkg.go.dev/github.com/xyproto/dialog?tab=doc)
 
+## Screenshots
+
+![screenshot 1](img/dialog_screenshot1.png)
+![screenshot 2](img/dialog_screenshot2.png)
+
 ## Features and limitations
 
 Supports only these types:
@@ -14,11 +19,6 @@ Supports only these types:
 * Message box
 * Yes/No box
 * Menu box
-
-## Screenshots
-
-![screenshot 1](img/dialog_screenshot1.png)
-![screenshot 2](img/dialog_screenshot2.png)
 
 ## Example use
 
