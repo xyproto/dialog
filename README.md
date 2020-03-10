@@ -46,6 +46,10 @@ func main() {
 }
 ```
 
+## Requirements
+
+* Go >= 1.10
+
 ## General info
 
 * Version: 1.1.0
