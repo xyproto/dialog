@@ -1,8 +1,21 @@
-# dialog
+# dialog [![Build Status](https://travis-ci.com/xyproto/dialog.svg?branch=master)](https://travis-ci.com/xyproto/dialog) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/dialog)](https://goreportcard.com/report/github.com/xyproto/dialog) [![License](https://img.shields.io/badge/License-MIT-brightgreen)](https://raw.githubusercontent.com/xyproto/dialog/master/LICENSE)
 
 Simple wrapper for the `dialog` executable.
 
-[![GoDoc](https://godoc.org/github.com/xyproto/dialog?status.svg)](http://godoc.org/github.com/xyproto/dialog) [![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/xyproto/dialog/master/LICENSE) [![Report Card](https://img.shields.io/badge/go_report-A+-brightgreen.svg?style=flat)](http://goreportcard.com/report/xyproto/dialog)
+## Online documentation
+
+* [godoc.org](https://godoc.org/github.com/xyproto/dialog)
+* [pkg.go.dev](https://pkg.go.dev/github.com/xyproto/dialog?tab=doc)
+
+## Features and limitations
+
+Supports only these types:
+
+* Message box
+* Yes/No box
+* Menu box
+
+## Screenshots
 
 ![screenshot 1](img/dialog_screenshot1.png)
 ![screenshot 2](img/dialog_screenshot2.png)
@@ -18,17 +31,23 @@ import (
 )
 
 func main() {
-	d := dialog.New(80, 20)
-	d.MsgBox("hi")
-	answer := d.Menu("hi", 6, map[string]string{"a": "A", "b": "B"})
-	fmt.Printf("\n\n\n\n%s\n", answer)
+	d := dialog.New(80, 24)
+	answeredYes, err := d.YesNo("Do you want cake?")
+	if err != nil {
+		panic(err)
+	}
+	if answeredYes {
+		fmt.Println("You answered: yes")
+		fmt.Println("The cake is a lie. Haha!")
+	} else {
+		fmt.Println("You answered: no")
+		fmt.Println("Fine.")
+	}
 }
 ```
 
-The path to `dialog` is `/usr/bin/dialog` by default, but can be changed with the `SetPath` function.
-
 ## General info
 
-* Version: 1.0
+* Version: 1.1.0
 * License: MIT
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
